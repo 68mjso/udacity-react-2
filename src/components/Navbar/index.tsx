@@ -1,6 +1,7 @@
 import { User } from "@models/User";
 import { Avatar, Box, Button, Link, Typography } from "@mui/material";
 import * as Router from "react-router-dom";
+import { stringAvatar } from "../../utilities/utils";
 
 export default function Navbar({
   user,
@@ -9,16 +10,6 @@ export default function Navbar({
   user: User;
   onLogout: () => void;
 }) {
-  function stringAvatar(name: string) {
-    if (!name || name.trim() === "") {
-      return {
-        children: "",
-      };
-    }
-    return {
-      children: `${name.slice(0, 1)}`,
-    };
-  }
   return (
     <Box position="absolute" top={0} left={0} width="100%" boxShadow={1}>
       <Box display="flex" justifyContent="space-between">

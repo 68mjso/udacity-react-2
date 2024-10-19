@@ -1,15 +1,15 @@
+import AddPage from "@containers/AddPage";
+import DetailPage from "@containers/DetailPage";
+import LeaderBoardPage from "@containers/LeaderBoardPage";
+import NotFoundPage from "@containers/NotFoundPage";
+import { _getQuestions, _getUsers } from "@utilities/api";
+import store, { setQuestions, setUsers } from "@utilities/store";
+import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import HomePage from "./containers/HomePage";
-import { useEffect } from "react";
-import { _getQuestions, _getUsers } from "@utilities/api";
-import store, { setQuestions, setUsers } from "@utilities/store";
-import AddPage from "@containers/AddPage";
-import DetailPage from "@containers/DetailPage";
-import NotFoundPage from "@containers/NotFoundPage";
-import LeaderBoardPage from "@containers/LeaderBoardPage";
 
-function App() {
+const App = () => {
   useEffect(() => {
     _getUsers().then((res: any) => {
       let arr = [];
@@ -58,6 +58,6 @@ function App() {
   ]);
 
   return <RouterProvider router={router} />;
-}
+};
 
 export default App;

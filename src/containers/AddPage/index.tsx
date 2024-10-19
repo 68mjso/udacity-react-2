@@ -1,12 +1,13 @@
-import Root from "@containers/Root";
-import { Question } from "@models/Question";
-import { User } from "@models/User";
+import Root from "../Root";
+import { Question } from "../../models/Question";
+import { User } from "../../models/User";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import store, { setQuestions } from "@utilities/store";
+import { formatQuestion } from "../../utilities/api";
+import store, { setQuestions } from "../../utilities/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-export default function AddPage() {
+const AddPage = () => {
   const [optionOne, setOptionOne] = useState<string>("");
   const [optionTwo, setOptionTwo] = useState<string>("");
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
@@ -18,19 +19,12 @@ export default function AddPage() {
 
   const onSubmitQuestion = () => {
     const arr: Array<Question> = [...questionList];
-    arr.push({
-      id: String(Date.now()),
-      author: user.id,
-      timestamp: Date.now(),
-      optionOne: {
-        votes: [],
-        text: optionOne,
-      },
-      optionTwo: {
-        votes: [],
-        text: optionTwo,
-      },
+    const newQuestion = formatQuestion({
+      author: user?.id ?? "",
+      optionOneText: optionOne,
+      optionTwoText: optionTwo,
     });
+    arr.push(newQuestion);
     store.dispatch(setQuestions(arr));
     setIsSubmited(true);
   };
@@ -64,6 +58,7 @@ export default function AddPage() {
                 variant="outlined"
                 fullWidth
                 label="Option One"
+                data-testid="option-one-input"
               />
               <Typography>OR</Typography>
               <TextField
@@ -72,6 +67,7 @@ export default function AddPage() {
                 onChange={(e) => setOptionTwo(e.target.value)}
                 variant="outlined"
                 label="Option Two"
+                data-testid="option-two-input"
                 fullWidth
               />
             </Box>
@@ -90,4 +86,5 @@ export default function AddPage() {
       </Container>
     </Root>
   );
-}
+};
+export default AddPage;
