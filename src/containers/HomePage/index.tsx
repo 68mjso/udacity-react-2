@@ -2,7 +2,7 @@ import HomeTable from "@components/HomeTable";
 import Root from "@containers/Root";
 import { Question } from "@models/Question";
 import { User } from "@models/User";
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Divider, Tab, Tabs, Typography } from "@mui/material";
 import store, { setQuestion } from "@utilities/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 export default function HomePage() {
   const [list, setList] = useState<Array<Question>>([]);
   const [listAnswered, setListAnswered] = useState<Array<string>>([]);
+  const [tab, setTab] = useState(0);
   const navigate = useNavigate();
   const questionList = useSelector(
     (state: { app: { questions: Array<Question> } }) => state.app.questions
@@ -42,27 +43,32 @@ export default function HomePage() {
   return (
     <Root>
       <Box display="flex" flexDirection="column" gap={3}>
-        <Typography variant="h4">Unanswered</Typography>
-        <HomeTable
-          headers={["ID", "Author", "Date Created", ""]}
-          rows={list
-            .filter((e) => listAnswered.indexOf(e?.id ?? "") === -1)
-            .sort((a, b) => b.timestamp - a.timestamp)}
-          answered={listAnswered}
-          onSelectQuestion={onSelectQuestion}
-          users={users}
-        />
-        <Divider />
-        <Typography variant="h4">Answered</Typography>
-        <HomeTable
-          headers={["ID", "Author", "Date Created", ""]}
-          rows={list
-            .filter((e) => listAnswered.indexOf(e?.id ?? "") !== -1)
-            .sort((a, b) => b.timestamp - a.timestamp)}
-          answered={listAnswered}
-          onSelectQuestion={onSelectQuestion}
-          users={users}
-        />
+        <Tabs value={tab} onChange={(_, e) => setTab(e)}>
+          <Tab label="Unanswered" />
+          <Tab label="Answered" />
+        </Tabs>
+        {tab === 0 && (
+          <HomeTable
+            headers={["ID", "Author", "Date Created", ""]}
+            rows={list
+              .filter((e) => listAnswered.indexOf(e?.id ?? "") === -1)
+              .sort((a, b) => b.timestamp - a.timestamp)}
+            answered={listAnswered}
+            onSelectQuestion={onSelectQuestion}
+            users={users}
+          />
+        )}
+        {tab === 1 && (
+          <HomeTable
+            headers={["ID", "Author", "Date Created", ""]}
+            rows={list
+              .filter((e) => listAnswered.indexOf(e?.id ?? "") !== -1)
+              .sort((a, b) => b.timestamp - a.timestamp)}
+            answered={listAnswered}
+            onSelectQuestion={onSelectQuestion}
+            users={users}
+          />
+        )}
       </Box>
     </Root>
   );
